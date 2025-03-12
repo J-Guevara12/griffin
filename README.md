@@ -48,7 +48,7 @@ I want to be able to remember any of the tasks I have to work and other activiti
 ### Phase 4:
 I will probably want to access my system from multiple devices, a remote database and backend will have to be developed:
 - [ ] Implement a backend that performs the *Phase 1* Operations (CRUD on the database) as an HTTP server.
-- [ ] Implement authentication and authorization (SPIRE library seems an interesting option).
+- [ ] Implement authentication and authorization (SPIFFE library seems an interesting option).
 - [ ] Modify the CLI and TUI to perform API calls instead of direct database operations.
 - [ ] When interacting from a mobile device, instead of writing a full mobile-app I'd preffer to develop a telegram/whatsapp bot that allows me to query my most recent tasks and perform basic update operations (silence notifications for instance).
 
