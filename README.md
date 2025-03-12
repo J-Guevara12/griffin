@@ -6,7 +6,7 @@
 ### Phase 1:
 The data will be stored in MongoDB (initially self hosted) and the idea is to interact with it using a CLI (Cobra):
 
-- [ ] Create the database and set up the initial schema (required fields only)
+- [X] Create the database and set up the initial schema (required fields only)
 - [ ] Set up functions to perform CRUD operations on the database
 - [ ] Bind these functions with CLI commands
 - [ ] Add configuration options (.conf, .yaml, .env)
