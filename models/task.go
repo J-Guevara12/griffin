@@ -3,6 +3,8 @@ package models
 import (
 	"fmt"
 	"time"
+
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 type Priority string
@@ -25,6 +27,7 @@ const (
 )
  
 type Task struct {
+    ID bson.ObjectID `bson:"_id"`
     Summary string
     Description string
     Notes string
@@ -33,7 +36,8 @@ type Task struct {
     Status Status
 }
 
-func NewTask(summary string, Description string, notes string, due_date time.Time, priority Priority, status Status) Task {
+// Task Constructor. Every time you intend to create a new task you should use this function
+func NewTask(summary string, Description string, notes string, due_date time.Time, priority Priority, status Status) *Task {
     switch priority{
     case Highest, High, Medium, Low, Lowest:
     default:
@@ -45,7 +49,8 @@ func NewTask(summary string, Description string, notes string, due_date time.Tim
     default:
         panic(fmt.Sprintf("Status value (%v) not suported!", status))
     }
-    return Task{
+    return &Task{
+        ID: bson.NewObjectID(),
         Summary: summary,
         Description: Description,
         Notes: notes,
