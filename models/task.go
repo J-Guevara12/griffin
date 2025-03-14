@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -41,13 +42,15 @@ func NewTask(summary string, Description string, notes string, due_date time.Tim
     switch priority{
     case Highest, High, Medium, Low, Lowest:
     default:
-        panic(fmt.Sprintf("Priority value (%v) not suported!", priority))
+        fmt.Fprintf(os.Stderr, "Priority value (%v) not suported!\n", priority)
+        os.Exit(1)
     }
 
     switch status{
     case Closed, WorkingOn, NotOnYou, Starting, NotYetStarted:
     default:
-        panic(fmt.Sprintf("Status value (%v) not suported!", status))
+        fmt.Fprintf(os.Stderr, "Status value (%v) not suported!\n", status)
+        os.Exit(1)
     }
     return &Task{
         ID: bson.NewObjectID(),

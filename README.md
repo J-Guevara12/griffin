@@ -13,6 +13,8 @@ The data will be stored in MongoDB (initially self hosted) and the idea is to in
 - [ ] Visualize short fields (Summary, due date, priority) in a tabular format
 - [ ] Add Markdown support for the descriptions.
 - [ ] Enable custom fields
+- [ ] Handle Status and Priority values as database objects (inside a collection)
+- [ ] Perform CRUD operations over the previous fields (including custom).
 - [ ] Enable value-limited (like a select) fields
 
 ### Phase 2:
