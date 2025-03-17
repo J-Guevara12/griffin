@@ -9,13 +9,16 @@ The data will be stored in MongoDB (initially self hosted) and the idea is to in
 - [X] Create the database and set up the initial schema (required fields only)
 - [X] Set up functions to perform CRUD operations on the database
 - [ ] Bind these functions with CLI commands
+- [ ] Add options to the `ls` command (sort, filter, output format, limit).
+- [ ] Add `created` and `modified` fields.
 - [ ] Add configuration options (.conf, .yaml, .env)
-- [ ] Visualize short fields (Summary, due date, priority) in a tabular format
+- [X] Visualize short fields (Summary, due date, priority) in a tabular format.
 - [ ] Add Markdown support for the descriptions.
-- [ ] Enable custom fields
-- [ ] Handle Status and Priority values as database objects (inside a collection)
+- [ ] Enable custom fields.
+- [ ] Handle Status and Priority values as database objects (inside a collection).
 - [ ] Perform CRUD operations over the previous fields (including custom).
-- [ ] Enable value-limited (like a select) fields
+- [ ] Enable value-limited (like a select) fields.
+- [ ] Color palette via configuration file (Include previsualizer).
 
 ### Phase 2:
 This phase involves the development of a TUI able to interact with the system and facilitate the CLI operations and adding a few cool features:
@@ -31,6 +34,7 @@ This phase involves the development of a TUI able to interact with the system an
 - [ ] Promote tasks to projects.
 - [ ] Improved user experience to select dates.
 - [ ] Custom field editing UI.
+- [ ] Fuzzy finder (tentative).
 
 ### Phase 3:
 I want to be able to remember any of the tasks I have to work and other activities, the idea here is to build a daemon capable of notifying me.

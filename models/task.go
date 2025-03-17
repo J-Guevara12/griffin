@@ -5,6 +5,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/lipgloss/table"
+
+	"github.com/mergestat/timediff"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
@@ -61,4 +65,64 @@ func NewTask(summary string, Description string, notes string, due_date time.Tim
         Priority: priority,
         Status: status,
     }
+}
+
+func (task Task) To_ls_table() []string {
+    return []string{
+        task.ID.Hex(),
+        task.Summary,
+        task.DueDate.Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.DueDate)),
+        string(task.Priority),
+        string(task.Status),
+    }
+}
+
+func CreateTaskTable(tasks []Task) string {
+        rows := make([][]string, 0)
+        for _, task := range tasks {
+            rows = append(rows, task.To_ls_table())
+        }
+
+        var (
+            purple    = lipgloss.Color("99")
+            gray      = lipgloss.Color("245")
+            lightGray = lipgloss.Color("241")
+            white     = lipgloss.Color("#FFFFFF")
+
+            headerStyle  = lipgloss.NewStyle().Foreground(white).Bold(true).Align(lipgloss.Center).Background(purple)
+
+            priorityColor = map[Priority]lipgloss.Color{
+                Lowest:  lipgloss.Color("#006c7d"),
+                Low:     lipgloss.Color("#04d18d"),
+                Medium:  lipgloss.Color("#ebf705"),
+                High:    lipgloss.Color("#f78205"),
+                Highest: lipgloss.Color("#f72d05"),
+            }
+        )
+        t:= table.New().
+        Border(lipgloss.NormalBorder()).
+        BorderStyle(lipgloss.NewStyle().Foreground(purple)).StyleFunc(func(row, col int) lipgloss.Style {
+            style := lipgloss.NewStyle().Padding(1, 2, 0).Align(lipgloss.Center)
+            switch {
+                case row == table.HeaderRow:
+                    return headerStyle
+                case row%2 == 0:
+                    style = style.Foreground(lightGray)
+                default:
+                    style = style.Foreground(gray)
+                }
+            switch col {
+                case 0:
+                    style = style.Width(28)
+                case 1:
+                    style = style.Width(50).Align(lipgloss.Left)
+                case 3:
+                    priority := fmt.Sprint(rows[row][col])
+                    style = style.Foreground(priorityColor[Priority(priority)])
+            }
+            return style
+            }).
+        Headers("ID", "Summary", "Due date", "Priority", "Status").
+        Rows(rows...)
+        return fmt.Sprint(t)
 }
