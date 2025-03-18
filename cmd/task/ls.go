@@ -18,7 +18,6 @@ var lsCmd = &cobra.Command{
         tasks := configured_db().GetAllTasks()
 
         fmt.Println(models.CreateTaskTable(tasks))
-        fmt.Println(configured_db().GetTaskByID("67d3aa9f77491e00cc9e20cc"))
 	},
 }
 
