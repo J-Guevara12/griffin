@@ -10,8 +10,9 @@ The data will be stored in MongoDB (initially self hosted) and the idea is to in
 - [X] Set up functions to perform CRUD operations on the database
 - [ ] Bind these functions with CLI commands
 - [ ] Add options to the `ls` command (sort, filter, output format, limit).
-- [ ] Add `created` and `modified` fields.
+- [ ] Add `created`, `closed` and `modified` fields.
 - [ ] Add configuration options (.conf, .yaml, .env)
+- [ ] Dependency injection over the `db_writer()` object.
 - [X] Visualize short fields (Summary, due date, priority) in a tabular format.
 - [ ] Add Markdown support for the descriptions.
 - [ ] Enable custom fields.
