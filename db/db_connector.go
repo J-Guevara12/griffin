@@ -115,3 +115,25 @@ func (connector DBConnector) DeleteTask(task *models.Task) {
     res := collection.FindOneAndDelete(ctx, bson.D{{Key: "_id", Value: task.ID}})
     res.Decode(task)
 }
+
+func (connector DBConnector) GetTaskByID(id string) models.Task{
+    client := connector.connect()
+    defer close_connection(client)
+
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second * time.Duration(connector.timeout))
+    defer cancel()
+    collection := client.Database(connector.database).Collection(connector.collection)
+
+    object_id, err := bson.ObjectIDFromHex(id)
+    if err != nil {
+        panic(err)
+    }
+
+    var task models.Task
+    res := collection.FindOne(ctx, bson.D{{Key: "_id", Value: object_id}})
+
+    res.Decode(&task)
+
+    return task
+}
+
