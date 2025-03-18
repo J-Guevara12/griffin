@@ -98,8 +98,7 @@ func (connector DBConnector) UpdateTask(task *models.Task) {
     defer cancel()
     collection := client.Database(connector.database).Collection(connector.collection)
 
-    res := collection.FindOneAndReplace(ctx, bson.D{{Key: "_id", Value: task.ID}}, task)
-    res.Decode(task)
+    collection.FindOneAndReplace(ctx, bson.D{{Key: "_id", Value: task.ID}}, task)
 }
 
 

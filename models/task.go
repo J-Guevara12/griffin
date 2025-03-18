@@ -12,11 +12,33 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-type Priority string
-type Status string 
+type priority string
+type status string 
+
+func Priority(str string) priority {
+    switch priority(str){
+    case Highest, High, Medium, Low, Lowest:
+        return priority(str)
+    default:
+        fmt.Fprintf(os.Stderr, "Priority value (%v) not suported!\n", str)
+        os.Exit(1)
+        return ""
+    }
+}
+
+func Status(str string) status {
+    switch status(str){
+    case Closed, WorkingOn, NotOnYou, Starting, NotYetStarted:
+        return status(str)
+    default:
+        fmt.Fprintf(os.Stderr, "Status value (%v) not suported!\n", str)
+        os.Exit(1)
+        return ""
+    }
+}
 
 const (
-    Highest Priority = "Highest"
+    Highest priority = "Highest"
     High = "High"
     Medium = "Medium"
     Low = "Low"
@@ -24,7 +46,7 @@ const (
 )
 
 const (
-    Closed Status = "Closed"
+    Closed status = "Closed"
     WorkingOn =     "Working on"
     NotOnYou =      "Not on you"
     Starting =      "Starting"
@@ -37,33 +59,22 @@ type Task struct {
     Description string
     Notes string
     DueDate time.Time
-    Priority Priority
-    Status Status
+    Priority priority
+    Status status
 }
 
 // Task Constructor. Every time you intend to create a new task you should use this function
-func NewTask(summary string, Description string, notes string, due_date time.Time, priority Priority, status Status) *Task {
-    switch priority{
-    case Highest, High, Medium, Low, Lowest:
-    default:
-        fmt.Fprintf(os.Stderr, "Priority value (%v) not suported!\n", priority)
-        os.Exit(1)
-    }
-
-    switch status{
-    case Closed, WorkingOn, NotOnYou, Starting, NotYetStarted:
-    default:
-        fmt.Fprintf(os.Stderr, "Status value (%v) not suported!\n", status)
-        os.Exit(1)
-    }
+func NewTask(summary string, Description string, notes string, due_date time.Time, priority string, status string) *Task {
+    _priority := Priority(priority)
+    _status := Status(status)
     return &Task{
         ID: bson.NewObjectID(),
         Summary: summary,
         Description: Description,
         Notes: notes,
         DueDate: due_date,
-        Priority: priority,
-        Status: status,
+        Priority: _priority,
+        Status: _status,
     }
 }
 
@@ -71,7 +82,7 @@ func (task Task) To_ls_table() []string {
     return []string{
         task.ID.Hex(),
         task.Summary,
-        task.DueDate.Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.DueDate)),
+        task.DueDate.Local().Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.DueDate)),
         string(task.Priority),
         string(task.Status),
     }
@@ -91,7 +102,7 @@ func CreateTaskTable(tasks []Task) string {
 
             headerStyle  = lipgloss.NewStyle().Foreground(white).Bold(true).Align(lipgloss.Center).Background(purple)
 
-            priorityColor = map[Priority]lipgloss.Color{
+            priorityColor = map[priority]lipgloss.Color{
                 Lowest:  lipgloss.Color("#006c7d"),
                 Low:     lipgloss.Color("#04d18d"),
                 Medium:  lipgloss.Color("#ebf705"),
