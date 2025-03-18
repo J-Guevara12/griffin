@@ -13,16 +13,12 @@ import (
 var lsCmd = &cobra.Command{
 	Use:   "ls",
 	Short: "Lists all tasks",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long: `Displays a table with all the tasks in the database.`,
 	Run: func(cmd *cobra.Command, args []string) {
         tasks := configured_db().GetAllTasks()
 
         fmt.Println(models.CreateTaskTable(tasks))
+        fmt.Println(configured_db().GetTaskByID("67d3aa9f77491e00cc9e20cc"))
 	},
 }
 
