@@ -9,7 +9,7 @@ The data will be stored in MongoDB (initially self hosted) and the idea is to in
 - [X] Create the database and set up the initial schema (required fields only)
 - [X] Set up functions to perform CRUD operations on the database
 - [X] Bind these functions with CLI commands
-- [ ] Add `created`, `closed` and `modified` fields.
+- [X] Add `created`, `closed` and `modified` fields.
 - [ ] Add options to the `ls` command (sort, filter, output format, limit).
 - [ ] Add configuration options (.conf, .yaml, .env)
 - [ ] Dependency injection over the `db_writer()` object.

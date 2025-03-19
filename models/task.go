@@ -59,20 +59,24 @@ type Task struct {
     Description string
     Notes string
     DueDate time.Time
+    Created time.Time
+    Closed time.Time
+    Modified time.Time
     Priority priority
     Status status
 }
 
 // Task Constructor. Every time you intend to create a new task you should use this function
-func NewTask(summary string, Description string, notes string, due_date time.Time, priority string, status string) *Task {
+func NewTask(summary string, description string, notes string, due_date time.Time, priority string, status string) *Task {
     _priority := Priority(priority)
     _status := Status(status)
     return &Task{
         ID: bson.NewObjectID(),
         Summary: summary,
-        Description: Description,
+        Description: description,
         Notes: notes,
         DueDate: due_date,
+        Created: time.Now(),
         Priority: _priority,
         Status: _status,
     }

@@ -7,6 +7,7 @@ package task
 import (
 	"github.com/spf13/cobra"
     "griffin/models"
+    "time"
 )
 
 // updateCmd represents the update command
@@ -29,7 +30,12 @@ var updateCmd = &cobra.Command{
             task.Notes = notes
         }
         if status != "" {
-            task.Status = models.Status(status)
+            new_status := models.Status(status)
+            if new_status == models.Closed && task.Status != models.Closed {
+                task.Closed = time.Now()
+            }
+
+            task.Status = new_status
         }
         if priority != "" {
             task.Priority = models.Priority(priority)
@@ -39,6 +45,7 @@ var updateCmd = &cobra.Command{
             task.DueDate = parse_timedelta(timedelta)
         }
 
+        task.Modified = time.Now()
         configured_db().UpdateTask(&task)
 
 	},
