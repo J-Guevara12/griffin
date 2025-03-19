@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+    s "strings"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 
@@ -82,26 +83,58 @@ func NewTask(summary string, description string, notes string, due_date time.Tim
     }
 }
 
-func (task Task) To_ls_table() []string {
-    return []string{
-        task.ID.Hex(),
-        task.Summary,
-        task.DueDate.Local().Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.DueDate)),
-        string(task.Priority),
-        string(task.Status),
+func (task Task) To_ls_table(columns[]string) []string {
+    output := make([]string, len(columns))
+    for i, column := range columns{
+        switch s.ToLower(column) {
+        case "id":
+            output[i] = task.ID.Hex()
+        case "summary":
+            output[i] = task.Summary
+        case "description":
+            output[i] = task.Description
+        case "notes":
+            output[i] = task.Notes
+        case "due_date":
+            output[i] = task.DueDate.Local().Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.DueDate))
+        case "created":
+            output[i] = task.Created.Local().Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.Created))
+        case "modified":
+            output[i] = task.Modified.Local().Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.Modified))
+        case "closed":
+            output[i] = task.Closed.Local().Format("02-Jan-2006 15:04:05") + fmt.Sprintf("\n(%v)", timediff.TimeDiff(task.Closed))
+        case "priority":
+            output[i] = string(task.Priority)
+        case "status":
+            output[i] = string(task.Status)
+        default:
+            fmt.Fprintf(os.Stderr, "Column value '%v' not recognized!\n", column)
+            os.Exit(1)
+
+        }
+
     }
+    return output
 }
 
-func CreateTaskTable(tasks []Task) string {
+func CreateTaskTable(tasks []Task, columns []string) string {
         rows := make([][]string, 0)
+
         for _, task := range tasks {
-            rows = append(rows, task.To_ls_table())
+            rows = append(rows, task.To_ls_table(columns))
+        }
+
+        headers := make([]string, len(columns))
+
+        for i, column := range columns {
+            headers[i] = s.Replace(s.ToUpper(column), "_", " ", -1)
+
         }
 
         var (
             purple    = lipgloss.Color("99")
             gray      = lipgloss.Color("245")
-            lightGray = lipgloss.Color("241")
+            lightGray = lipgloss.Color("243")
             white     = lipgloss.Color("#FFFFFF")
 
             headerStyle  = lipgloss.NewStyle().Foreground(white).Bold(true).Align(lipgloss.Center).Background(purple)
@@ -126,18 +159,18 @@ func CreateTaskTable(tasks []Task) string {
                 default:
                     style = style.Foreground(gray)
                 }
-            switch col {
-                case 0:
+            switch s.ToLower(headers[col]) {
+                case "id":
                     style = style.Width(28)
-                case 1:
+                case "summary":
                     style = style.Width(50).Align(lipgloss.Left)
-                case 3:
+                case "priority":
                     priority := fmt.Sprint(rows[row][col])
                     style = style.Foreground(priorityColor[Priority(priority)])
             }
             return style
             }).
-        Headers("ID", "Summary", "Due date", "Priority", "Status").
+        Headers(headers...).
         Rows(rows...)
         return fmt.Sprint(t)
 }

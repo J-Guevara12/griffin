@@ -16,8 +16,9 @@ var lsCmd = &cobra.Command{
 	Long: `Displays a table with all the tasks in the database.`,
 	Run: func(cmd *cobra.Command, args []string) {
         tasks := configured_db().GetAllTasks()
+        columns := []string{"id", "summary", "created", "status", "priority"}
 
-        fmt.Println(models.CreateTaskTable(tasks))
+        fmt.Println(models.CreateTaskTable(tasks, columns))
 	},
 }
 
