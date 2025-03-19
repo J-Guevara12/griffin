@@ -66,7 +66,7 @@ func parse_timedelta(timedelta string) time.Time {
     return due_time
 }
 
-func configured_db() db.DBConnector{
+func configured_db() db.TaskWriter {
     return db.NewDBConnector("mongodb://localhost:27017", "test", "Tasks", 5)
 }
 

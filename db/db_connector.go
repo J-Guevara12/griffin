@@ -22,7 +22,6 @@ type DBConnector struct {
 
 func NewDBConnector(client_URI string, database string, collection string, timeout int) DBConnector {
     return DBConnector{client_URI, database, collection, timeout}
-
 }
 
 // Creates a connection to the datbase
